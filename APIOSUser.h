@@ -39,7 +39,7 @@
 
 #import "AFHTTPRequestOperation.h"
 
-@interface DIOSUser : NSObject
+@interface APIOSUser : NSObject
 - (void)userGet:(NSDictionary *)user  
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
@@ -75,7 +75,7 @@
           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
 
-- (void)userLoginWithUsername:(NSString *)username andPassword:(NSString *)password  
+- (void)userLoginWithEmailAddress:(NSString *)emailAddress andPassword:(NSString *)password  
                       success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
 

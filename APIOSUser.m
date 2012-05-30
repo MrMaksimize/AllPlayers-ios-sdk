@@ -37,9 +37,9 @@
 // ***** END LICENSE BLOCK *****
 
 
-#import "DIOSUser.h"
-#import "DIOSSession.h"
-@implementation DIOSUser
+#import "APIOSUser.h"
+#import "APIOSSession.h"
+@implementation APIOSUser
 
 
 #pragma mark UserGets
@@ -47,7 +47,7 @@
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  [[DIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@/%@", kDiosEndpoint, kDiosBaseUser, [user objectForKey:@"uid"]] 
+  [[APIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@/%@", kAPIOSEndpoint, kAPIOSBaseUser, [user objectForKey:@"uid"]] 
                             parameters:nil 
                                success:success 
                                failure:failure];
@@ -59,7 +59,7 @@
          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  [[DIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@", kDiosEndpoint, kDiosBaseUser] 
+  [[APIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@", kAPIOSEndpoint, kAPIOSBaseUser] 
                              parameters:user 
                                 success:success 
                                 failure:failure];
@@ -70,7 +70,7 @@
          success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
          failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  [[DIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/register", kDiosEndpoint, kDiosBaseUser] 
+  [[APIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/register", kAPIOSEndpoint, kAPIOSBaseUser] 
                              parameters:user 
                                 success:success 
                                 failure:failure];
@@ -81,7 +81,7 @@
            success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  [[DIOSSession sharedSession] putPath:[NSString stringWithFormat:@"%@/%@/%@", kDiosEndpoint, kDiosBaseUser, [user objectForKey:@"uid"]] 
+  [[APIOSSession sharedSession] putPath:[NSString stringWithFormat:@"%@/%@/%@", kAPIOSEndpoint, kAPIOSBaseUser, [user objectForKey:@"uid"]] 
                             parameters:user 
                                success:success 
                                failure:failure];
@@ -92,7 +92,7 @@
            success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  [[DIOSSession sharedSession] deletePath:[NSString stringWithFormat:@"%@/%@/%@", kDiosEndpoint, kDiosBaseUser, [user objectForKey:@"uid"]] 
+  [[APIOSSession sharedSession] deletePath:[NSString stringWithFormat:@"%@/%@/%@", kAPIOSEndpoint, kAPIOSBaseUser, [user objectForKey:@"uid"]] 
                                parameters:user 
                                   success:success
                                   failure:failure];
@@ -118,19 +118,19 @@
 - (void)userIndex:(NSDictionary *)params  
           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-  [[DIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@", kDiosEndpoint, kDiosBaseUser] 
+  [[APIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@", kAPIOSEndpoint, kAPIOSBaseUser] 
                             parameters:params 
                                success:success 
                                failure:failure];
 }
 
 #pragma mark userLogin
-- (void)userLoginWithUsername:(NSString *)username andPassword:(NSString *)password  
+- (void)userLoginWithEmailAddress:(NSString *)emailAddress andPassword:(NSString *)password  
                       success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
   
-  NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:username, password, nil] forKeys:[NSArray arrayWithObjects:@"username", @"password", nil]];
-  [[DIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/login", kDiosEndpoint, kDiosBaseUser] 
+  NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:emailAddress, password, nil] forKeys:[NSArray arrayWithObjects:@"emailaddress", @"password", nil]];
+  [[APIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/login", kAPIOSEndpoint, kAPIOSBaseUser] 
                              parameters:params 
                                 success:success 
                                 failure:failure];
@@ -138,13 +138,13 @@
 - (void)userLogin:(NSDictionary *)user  
           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-  [self userLoginWithUsername:[user objectForKey:@"name"] andPassword:[user objectForKey:@"pass"] success:success failure:failure];
+  [self userLoginWithEmailAddress:[user objectForKey:@"emailaddress"] andPassword:[user objectForKey:@"password"] success:success failure:failure];
 }
 
 #pragma mark userLogout
 - (void)userLogoutWithSuccessBlock:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
                            failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-  [[DIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/logout", kDiosEndpoint, kDiosBaseUser] 
+  [[APIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/logout", kAPIOSEndpoint, kAPIOSBaseUser] 
                              parameters:nil 
                                 success:success 
                                 failure:failure];
