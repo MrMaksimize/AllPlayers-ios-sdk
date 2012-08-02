@@ -1,5 +1,5 @@
 //
-// APIOSSettings.h
+// APIOSGroup.m
 //
 // APCI
 //
@@ -36,8 +36,20 @@
 //
 // ***** END LICENSE BLOCK *****
 
+#import "APIOSGroup.h"
+#import "APIOSSession.h"
+#import "AFJSONUtilities.h"
+@implementation APIOSGroup
 
-#define kAPIOSBaseUrl @"https://www.pdup.allplayers.com"
-#define kAPIOSEndpoint @"api/v1/rest"
-#define kAPIOSBaseUser @"users"
-#define kAPIOSBaseGroup @"groups"
+#pragma mark nodeGets
+- (void)groupGet:(NSString *)groupUUID  
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
+  
+  [[APIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@/%@", kAPIOSEndpoint, kAPIOSBaseGroup, groupUUID] 
+                            parameters:nil 
+                               success:success 
+                               failure:failure];
+}
+
+@end

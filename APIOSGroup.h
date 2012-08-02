@@ -1,5 +1,5 @@
 //
-// APIOSSettings.h
+// APIOSGroup.h
 //
 // APCI
 //
@@ -36,8 +36,12 @@
 //
 // ***** END LICENSE BLOCK *****
 
+#import "AFHTTPRequestOperation.h"
 
-#define kAPIOSBaseUrl @"https://www.pdup.allplayers.com"
-#define kAPIOSEndpoint @"api/v1/rest"
-#define kAPIOSBaseUser @"users"
-#define kAPIOSBaseGroup @"groups"
+@interface APIOSGroup : NSObject {
+}
+- (void)groupGet:(NSString *)groupUUID  
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
+
+@end

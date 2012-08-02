@@ -128,8 +128,10 @@
 - (void)userLoginWithEmailAddress:(NSString *)emailAddress andPassword:(NSString *)password  
                       success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
                       failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-  
-  NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:emailAddress, password, nil] forKeys:[NSArray arrayWithObjects:@"emailaddress", @"password", nil]];
+  NSLog(@"EMAIL - %@", emailAddress);
+  NSLog(@"PWD - %@", password);
+
+  NSDictionary *params = [NSDictionary dictionaryWithObjects:[NSArray arrayWithObjects:emailAddress, password, nil] forKeys:[NSArray arrayWithObjects:@"username", @"password", nil]];
   [[APIOSSession sharedSession] postPath:[NSString stringWithFormat:@"%@/%@/login", kAPIOSEndpoint, kAPIOSBaseUser] 
                              parameters:params 
                                 success:success 
@@ -138,7 +140,7 @@
 - (void)userLogin:(NSDictionary *)user  
           success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
           failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure {
-  [self userLoginWithEmailAddress:[user objectForKey:@"emailaddress"] andPassword:[user objectForKey:@"password"] success:success failure:failure];
+    [self userLoginWithEmailAddress:[user objectForKey:@"name"] andPassword:[user objectForKey:@"pass"] success:success failure:failure];
 }
 
 #pragma mark userLogout
