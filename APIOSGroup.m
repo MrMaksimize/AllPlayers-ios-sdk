@@ -52,4 +52,28 @@
                                failure:failure];
 }
 
+- (void)groupGetMembers:(NSString *)groupUUID
+        success:(void (^)(AFHTTPRequestOperation *, id))success
+        failure:(void (^)(AFHTTPRequestOperation *, NSError *))failure {
+    
+    [[APIOSSession sharedSession] getPath:[NSString stringWithFormat:@"%@/%@/%@/%@", kAPIOSEndpoint, kAPIOSBaseGroup,groupUUID, @"members"]
+                               parameters:nil
+                                  success:success
+                                  failure:failure];
+    
+}
+
+/*- (NSArray *)getPeopleForGroup:(NSString *)gid {
+ APGroundControl *gc = [APGroundControl sharedGroundControl];
+ 
+ DIOSTWOConnect *connection = [[[DIOSTWOConnect alloc] initWithSession:gc.session] autorelease];
+ connection.requestMethod = @"GET";
+ // @todo: need to implement a sane limit and make a way to get more in the table view
+ connection.methodUrl = [NSString stringWithFormat:@"groups/%@/members%@limit=100", gid, FIRST_REQUEST_SEPARATOR];
+ [connection runMethod];
+ 
+ return [self arrayFromResults:[connection connResult]];
+ }
+
+ */
 @end

@@ -37,11 +37,16 @@
 // ***** END LICENSE BLOCK *****
 
 #import "AFHTTPRequestOperation.h"
-
+// @todo - why not instantiate the group with a uuid?
 @interface APIOSGroup : NSObject {
 }
 - (void)groupGet:(NSString *)groupUUID  
         success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
         failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
+
+- (void)groupGetMembers:(NSString *)groupUUID
+        success:(void (^)(AFHTTPRequestOperation *operation, id responseObject)) success
+        failure:(void (^)(AFHTTPRequestOperation *operation, NSError *error)) failure;
+
 
 @end
