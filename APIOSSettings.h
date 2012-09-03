@@ -37,7 +37,7 @@
 // ***** END LICENSE BLOCK *****
 
 
-#define kAPIOSBaseUrl @"https://www.pdup.allplayers.com"
+#define kAPIOSBaseUrl @"https://www.allplayers.com"
 #define kAPIOSEndpoint @"api/v1/rest"
 #define kAPIOSBaseUser @"users"
 #define kAPIOSBaseGroup @"groups"
