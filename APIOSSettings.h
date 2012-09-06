@@ -38,6 +38,6 @@
 
 
 #define kAPIOSBaseUrl @"https://www.allplayers.com"
-#define kAPIOSEndpoint @"api/v1/rest"
+#define kAPIOSEndpoint @"api/v1/rest/"
 #define kAPIOSBaseUser @"users"
 #define kAPIOSBaseGroup @"groups"

@@ -22,10 +22,12 @@
 
 #import "APIOSAPIClient.h"
 
-static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/api/v1/rest";
+static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/api/v1/rest/";
 
 @implementation APIOSAPIClient
 
+
+@synthesize user;
 + (APIOSAPIClient *)sharedClient {
     static APIOSAPIClient *_sharedClient = nil;
     static dispatch_once_t onceToken;
@@ -49,30 +51,89 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
     return self;
 }
 
+// Override paths for core data entities.
+- (NSString *)pathForEntity:(NSEntityDescription *)entity {
+  //return AFPluralizedString(entity.name);
+  //NSString *pathForEntity = @"";
+  if (entity.name == @"Person") {
+    return @"users";
+  }
+  else {
+    return [super pathForEntity:entity];
+  }
+}
+
+// Override paths for specific objects.
+- (NSString *)pathForObject:(NSManagedObject *)object {
+  NSString *resourceIdentifier = [(NSIncrementalStore *)object.objectID.persistentStore referenceObjectForObjectID:object.objectID];
+  return [[self pathForEntity:object.entity] stringByAppendingPathComponent:[resourceIdentifier lastPathComponent]];
+}
+
+// Override Paths for Relationships
+- (NSString *)pathForRelationship:(NSRelationshipDescription *)relationship
+                        forObject:(NSManagedObject *)object
+{
+  return [[self pathForObject:object] stringByAppendingPathComponent:relationship.name];
+}
+
 #pragma mark - AFIncrementalStore
 
 - (NSURLRequest *)requestForFetchRequest:(NSFetchRequest *)fetchRequest
                              withContext:(NSManagedObjectContext *)context
 {
     NSMutableURLRequest *mutableURLRequest = nil;
-    if ([fetchRequest.entityName isEqualToString:@"Tweet"]) {
-        mutableURLRequest = [self requestWithMethod:@"GET" path:@"statuses/public_timeline.json" parameters:nil];
+    if ([fetchRequest.entityName isEqualToString:@"Person"]) {
+      mutableURLRequest = [self requestWithMethod:@"GET" path:@"users/42f0fc54-f611-11e0-a44b-12313d04fc0f.json" parameters:nil];
     }
     
     return mutableURLRequest;
 }
 
+- (NSURLRequest *)requestWithMethod:(NSString *)method
+                pathForObjectWithID:(NSManagedObjectID *)objectID
+                        withContext:(NSManagedObjectContext *)context
+{
+  NSLog(@"RequestWithMethod PathForObjectWithID WithContext");
+}
+
+- (NSURLRequest *)requestWithMethod:(NSString *)method
+                pathForRelationship:(NSRelationshipDescription *)relationship
+                    forObjectWithID:(NSManagedObjectID *)objectID
+                        withContext:(NSManagedObjectContext *)context
+{
+  NSLog(@"RequestWithMethod PathForRelationship forObjectId withContext");
+}
+
+- (NSString *)resourceIdentifierForRepresentation:(NSDictionary *)representation
+                                         ofEntity:(NSEntityDescription *)entity
+                                     fromResponse:(NSHTTPURLResponse *)response
+{
+  NSLog(@"resourceIdentifierForRepresentation ofEntity from Response");
+  return [representation valueForKey:@"uuid"];
+}
+- (NSDictionary *)representationsForRelationshipsFromRepresentation:(NSDictionary *)representation
+                                                           ofEntity:(NSEntityDescription *)entity
+                                                       fromResponse:(NSHTTPURLResponse *)response
+{
+  NSLog(@"represenationsForRelatinshipsFromReporesentation OfEntity From Response");
+  return nil;
+}
+
+/*- (id)representationOrArrayOfRepresentationsFromResponseObject:(id)responseObject
+{
+  NSLog(@"test");
+}*/
+
 - (NSDictionary *)attributesForRepresentation:(NSDictionary *)representation 
                                          ofEntity:(NSEntityDescription *)entity 
                                      fromResponse:(NSHTTPURLResponse *)response 
 {
-    NSMutableDictionary *mutablePropertyValues = [[super attributesForRepresentation:representation ofEntity:entity fromResponse:response] mutableCopy];
-    if ([entity.name isEqualToString:@"Tweet"]) {
-        [mutablePropertyValues setValue:[representation valueForKey:@"id"] forKey:@"tweetID"];
-    } else if ([entity.name isEqualToString:@"User"]) {
-        [mutablePropertyValues setValue:[representation valueForKey:@"id"] forKey:@"userID"];
-        [mutablePropertyValues setValue:[representation valueForKey:@"screen_name"] forKey:@"username"];
-        [mutablePropertyValues setValue:[representation valueForKey:@"profile_image_url"] forKey:@"profileImageURLString"];
+  //NSMutableDictionary *mutablePropertyValues = [[super attributesForRepresentation:representation ofEntity:entity fromResponse:response] mutableCopy];
+  NSMutableDictionary *mutablePropertyValues = [[NSMutableDictionary alloc] init];
+    if ([entity.name isEqualToString:@"Person"]) {
+        [mutablePropertyValues setValue:[representation valueForKey:@"uuid"] forKey:@"uid"];
+      //[mutablePropertyValues setValue:[representation valueForKey:@"screen_name"] forKey:@"username"];
+      //[mutablePropertyValues setValue:[representation valueForKey:@"profile_image_url"] forKey:@"profileImageURLString"];
     }
     
     return mutablePropertyValues;

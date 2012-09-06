@@ -23,8 +23,15 @@
 #import "AFRESTClient.h"
 #import "AFIncrementalStore.h"
 
-@interface APIOSAPIClient : AFRESTClient <AFIncrementalStoreHTTPClient>
-
+@interface APIOSAPIClient : AFRESTClient <AFIncrementalStoreHTTPClient> {
+  NSDictionary *user;
+}
+@property (strong, nonatomic) NSDictionary *user;
 + (APIOSAPIClient *)sharedClient;
+
+- (NSString *)pathForEntity:(NSEntityDescription *)entity;
+- (NSString *)pathForObject:(NSManagedObject *)object;
+- (NSString *)pathForRelationship:(NSRelationshipDescription *)relationship
+                        forObject:(NSManagedObject *)object;
 
 @end
