@@ -38,7 +38,6 @@
 
 #import "APIOSGroup.h"
 #import "APIOSSession.h"
-#import "AFJSONUtilities.h"
 @implementation APIOSGroup
 
 #pragma mark nodeGets
