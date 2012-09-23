@@ -55,7 +55,9 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
 - (NSString *)pathForEntity:(NSEntityDescription *)entity {
   //return AFPluralizedString(entity.name);
   //NSString *pathForEntity = @"";
-  if (entity.name == @"Person") {
+  NSLog(@"%@", [entity name]);
+  NSLog(@"%@", entity.name);
+  if ([entity.name isEqualToString:@"Person"]) {
     return @"users";
   }
   else {
@@ -81,12 +83,24 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
 - (NSURLRequest *)requestForFetchRequest:(NSFetchRequest *)fetchRequest
                              withContext:(NSManagedObjectContext *)context
 {
-    NSMutableURLRequest *mutableURLRequest = nil;
-    if ([fetchRequest.entityName isEqualToString:@"Person"]) {
-      mutableURLRequest = [self requestWithMethod:@"GET" path:@"users/42f0fc54-f611-11e0-a44b-12313d04fc0f.json" parameters:nil];
+  NSMutableURLRequest *mutableURLRequest = nil;
+  if ([fetchRequest.entityName isEqualToString:@"Person"]) {
+    NSLog(@"%@", [fetchRequest.predicate predicateFormat]);
+    NSString *predicateString = [fetchRequest.predicate predicateFormat];
+    if ([predicateString rangeOfString:@"uid"].location != NSNotFound) {
+      NSArray *split = [predicateString componentsSeparatedByString:@"=="];
+      NSString *identifier = [[[split lastObject] stringByReplacingOccurrencesOfString:@"\"" withString:@""] stringByReplacingOccurrencesOfString:@" " withString:@""];
+      NSLog(@"%@", identifier);
+      mutableURLRequest = [self requestWithMethod:@"GET" path:[NSString stringWithFormat:@"%@/%@", [self pathForEntity:fetchRequest.entity], identifier] parameters:nil];
     }
-    
-    return mutableURLRequest;
+    else {
+      mutableURLRequest = [self requestWithMethod:@"GET" path:[self pathForEntity:fetchRequest.entity] parameters:nil];
+    }
+    //[NSString stringWithFormat:@"%d", currentScore];
+  }
+  mutableURLRequest.cachePolicy = NSURLRequestReturnCacheDataElseLoad;
+
+  return mutableURLRequest;
 }
 
 - (NSURLRequest *)requestWithMethod:(NSString *)method
@@ -120,36 +134,36 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
 }
 
 /*- (id)representationOrArrayOfRepresentationsFromResponseObject:(id)responseObject
-{
-  NSLog(@"test");
-}*/
+ {
+ NSLog(@"test");
+ }*/
 
-- (NSDictionary *)attributesForRepresentation:(NSDictionary *)representation 
-                                         ofEntity:(NSEntityDescription *)entity 
-                                     fromResponse:(NSHTTPURLResponse *)response 
+- (NSDictionary *)attributesForRepresentation:(NSDictionary *)representation
+                                     ofEntity:(NSEntityDescription *)entity
+                                 fromResponse:(NSHTTPURLResponse *)response
 {
   //NSMutableDictionary *mutablePropertyValues = [[super attributesForRepresentation:representation ofEntity:entity fromResponse:response] mutableCopy];
   NSMutableDictionary *mutablePropertyValues = [[NSMutableDictionary alloc] init];
-    if ([entity.name isEqualToString:@"Person"]) {
-        [mutablePropertyValues setValue:[representation valueForKey:@"uuid"] forKey:@"uid"];
-      //[mutablePropertyValues setValue:[representation valueForKey:@"screen_name"] forKey:@"username"];
-      //[mutablePropertyValues setValue:[representation valueForKey:@"profile_image_url"] forKey:@"profileImageURLString"];
-    }
-    
-    return mutablePropertyValues;
+  if ([entity.name isEqualToString:@"Person"]) {
+    [mutablePropertyValues setValue:[representation valueForKey:@"uuid"] forKey:@"uid"];
+    //[mutablePropertyValues setValue:[representation valueForKey:@"screen_name"] forKey:@"username"];
+    //[mutablePropertyValues setValue:[representation valueForKey:@"profile_image_url"] forKey:@"profileImageURLString"];
+  }
+
+  return mutablePropertyValues;
 }
 
 - (BOOL)shouldFetchRemoteAttributeValuesForObjectWithID:(NSManagedObjectID *)objectID
                                  inManagedObjectContext:(NSManagedObjectContext *)context
 {
-    return NO;
+  return NO;
 }
 
 - (BOOL)shouldFetchRemoteValuesForRelationship:(NSRelationshipDescription *)relationship
                                forObjectWithID:(NSManagedObjectID *)objectID
                         inManagedObjectContext:(NSManagedObjectContext *)context
 {
-    return NO;
+  return NO;
 }
 
 @end
