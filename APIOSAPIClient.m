@@ -129,6 +129,10 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
                                                            ofEntity:(NSEntityDescription *)entity
                                                        fromResponse:(NSHTTPURLResponse *)response
 {
+  if ([entity.name isEqualToString:@"Person"]) {
+    NSDictionary *userResultsAddress = [representation objectForKey:@"address"];
+    
+  }
   NSLog(@"represenationsForRelatinshipsFromReporesentation OfEntity From Response");
   return nil;
 }
@@ -146,6 +150,10 @@ static NSString * const kAPIOSAPIBaseURLString = @"https://www.allplayers.com/ap
   NSMutableDictionary *mutablePropertyValues = [[NSMutableDictionary alloc] init];
   if ([entity.name isEqualToString:@"Person"]) {
     [mutablePropertyValues setValue:[representation valueForKey:@"uuid"] forKey:@"uid"];
+    [mutablePropertyValues setValue:[representation valueForKey:@"firstname"] forKey:@"firstName"];
+    [mutablePropertyValues setValue:[representation valueForKey:@"lastname"] forKey:@"lastName"];
+    [mutablePropertyValues setValue:[representation valueForKey:@"email"] forKey:@"emailAddress"];
+    [mutablePropertyValues setValue:[representation valueForKey:@"gender"] forKey:@"gender"];
     //[mutablePropertyValues setValue:[representation valueForKey:@"screen_name"] forKey:@"username"];
     //[mutablePropertyValues setValue:[representation valueForKey:@"profile_image_url"] forKey:@"profileImageURLString"];
   }
